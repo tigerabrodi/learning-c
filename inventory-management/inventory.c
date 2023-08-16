@@ -46,8 +46,12 @@ int main()
         printf("What key would you like to add? ");
         scanf("%99s", inventory[currentIndex].key);
 
+	printf("\n");
+
         printf("What value would you like to add? ");
         scanf("%99s", inventory[currentIndex].value);
+
+	printf("\n Successfully added %s with value %s\n", inventory[currentIndex].key, inventory[currentIndex].value);
 
         currentIndex++;
    }
