@@ -7,61 +7,109 @@
 #define MAX_VALUE_LENGTH 100
 #define MAX_ENTRIES 100
 
-typedef struct {
+typedef struct
+{
     char key[MAX_KEY_LENGTH];
     char value[MAX_VALUE_LENGTH];
 } Item;
 
-typedef Item Inventory[MAX_ENTRIES]; // Define Inventory as an array of Items
+typedef enum
+{
+    ADD,
+    UPDATE,
+    DELETE,
+    READ,
+    UNKNOWN
+} Command;
 
-// Function to find the value for a given key
-char* findValue(Inventory* items, int currentIndex, const char* key) {
-    for (int i = 0; i < currentIndex; i++) {
-        if (strcmp((*items)[i].key, key) == 0) {
+typedef Item Inventory[MAX_ENTRIES];
+
+char *getValueViaKey(Inventory *items, int currentIndex, const char *key)
+{
+    for (int i = 0; i < currentIndex; i++)
+    {
+        if (strcmp((*items)[i].key, key) == 0)
+        {
             return (*items)[i].value;
         }
     }
-    return NULL; // Return NULL if key not found
+
+    return NULL;
+}
+
+Command getCommand(const char *command)
+{
+    if (strcmp(command, "add") == 0)
+    {
+        return ADD;
+    }
+    else if (strcmp(command, "update") == 0)
+    {
+        return UPDATE;
+    }
+    else if (strcmp(command, "delete") == 0)
+    {
+        return DELETE;
+    }
+    else if (strcmp(command, "read") == 0)
+    {
+        return READ;
+    }
+    else
+    {
+        return UNKNOWN;
+    }
 }
 
 int main()
 {
-   char command[MAX_KEY_LENGTH]; // Increased the size to avoid buffer overflow
+    char commandStr[15];
 
-   int currentIndex = 0;
+    int currentIndex = 0;
 
-   Inventory inventory;
+    Inventory inventory;
 
-   printf("Welcome! Here you can manage your inventory.\n");
+    printf("Welcome! Here you can manage your inventory.\n");
+    printf("You can either add, update or delete keys. You can also read what's in the inventory.\n");
+    printf("Keys can not have spaces in them.\n");
+    printf("What would you like to do? (add, update, delete, read): ");
+    scanf("%15s", commandStr);
 
-   printf("You can either add, update or delete keys. You can also read what's in the inventory.\n");
+    Command command = getCommand(commandStr);
 
-   printf("Keys can not have spaces in them.\n");
-
-   printf("What would you like to do? (add, update, delete, read): ");
-
-   scanf("%s", command);
-
-   if (strcmp(command, "add") == 0) {
+    switch (command)
+    {
+    case ADD:
         printf("What key would you like to add? ");
         scanf("%99s", inventory[currentIndex].key);
 
-	printf("\n");
+        printf("\n");
 
         printf("What value would you like to add? ");
         scanf("%99s", inventory[currentIndex].value);
 
-	printf("\n Successfully added %s with value %s\n", inventory[currentIndex].key, inventory[currentIndex].value);
+        printf("\n Successfully added %s with value %s\n", inventory[currentIndex].key, inventory[currentIndex].value);
 
         currentIndex++;
-   }
 
-   if (strcmp(command, "read") == 0) {
+        break;
+    case UPDATE:
+        // Code for the update command
+        break;
+    case DELETE:
+        // Code for the delete command
+        break;
+    case READ:
         printf("Key of item you'd like to read? ");
         char key[MAX_KEY_LENGTH];
         scanf("%99s", key);
-        printf("Value: %s\n", findValue(&inventory, currentIndex, key));
-   }
+        printf("Value: %s\n", getValueViaKey(&inventory, currentIndex, key));
+        break;
+    case UNKNOWN:
+    default:
+        printf("Unknown command: %s\n", commandStr);
+        break;
+    }
 
-   return 0;
+    return 0;
 }
