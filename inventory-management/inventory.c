@@ -24,7 +24,7 @@ typedef enum
 
 typedef Item Inventory[MAX_ENTRIES];
 
-char *getValueViaKey(Inventory *items, int currentIndex, const char *key)
+char *getValueByKey(Inventory *items, int currentIndex, const char *key)
 {
     for (int i = 0; i < currentIndex; i++)
     {
@@ -63,7 +63,7 @@ Command getCommand(const char *command)
 
 int main()
 {
-    char commandStr[15];
+    char commandStr[20];
 
     int currentIndex = 0;
 
@@ -73,7 +73,7 @@ int main()
     printf("You can either add, update or delete keys. You can also read what's in the inventory.\n");
     printf("Keys can not have spaces in them.\n");
     printf("What would you like to do? (add, update, delete, read): ");
-    scanf("%15s", commandStr);
+    scanf("%19s", commandStr);
 
     Command command = getCommand(commandStr);
 
@@ -103,7 +103,7 @@ int main()
         printf("Key of item you'd like to read? ");
         char key[MAX_KEY_LENGTH];
         scanf("%99s", key);
-        printf("Value: %s\n", getValueViaKey(&inventory, currentIndex, key));
+        printf("Value: %s\n", getValueByKey(&inventory, currentIndex, key));
         break;
     case UNKNOWN:
     default:
