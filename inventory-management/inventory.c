@@ -97,6 +97,7 @@ int main()
         if (strcmp(commandStr, "end") == 0)
         {
             printf("Thank you for using the inventory system!\n");
+            printInventory(inventory, currentIndex);
 
             break;
         }
