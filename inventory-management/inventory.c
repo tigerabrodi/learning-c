@@ -25,9 +25,9 @@ typedef enum
 
 typedef Item Inventory[MAX_ENTRIES];
 
-char *getValueByKey(Inventory *items, int currentIndex, const char *key)
+char *get_value_by_key(Inventory *items, int current_index, const char *key)
 {
-    for (int i = 0; i < currentIndex; i++)
+    for (int i = 0; i < current_index; i++)
     {
         if (strcmp((*items)[i].key, key) == 0)
         {
@@ -38,7 +38,7 @@ char *getValueByKey(Inventory *items, int currentIndex, const char *key)
     return NULL;
 }
 
-Command getCommand(const char *command)
+Command get_command(const char *command)
 {
     if (strcmp(command, "add") == 0)
     {
@@ -66,14 +66,14 @@ Command getCommand(const char *command)
     }
 }
 
-void printInventory(const Item *items, int currentIndex)
+void print_inventory(const Item *items, int current_index)
 {
     printf("Current Inventory:\n");
-    for (int i = 0; i < currentIndex; i++)
+    for (int i = 0; i < current_index; i++)
     {
         printf("Key: %s, Value: %s\n", items[i].key, items[i].value);
     }
-    if (currentIndex == 0)
+    if (current_index == 0)
     {
         printf("The inventory is empty.\n");
     }
@@ -81,8 +81,8 @@ void printInventory(const Item *items, int currentIndex)
 
 int main()
 {
-    char commandStr[20];
-    int currentIndex = 0;
+    char command_str[20];
+    int current_index = 0;
     Inventory inventory;
 
     printf("Welcome! Here you can manage your inventory.\n");
@@ -92,35 +92,37 @@ int main()
     while (1) // Infinite loop to keep accepting commands
     {
         printf("What would you like to do? (add, update, delete, read, end): ");
-        scanf("%19s", commandStr);
+        scanf("%19s", command_str);
 
-        if (strcmp(commandStr, "end") == 0)
+        if (strcmp(command_str, "end") == 0)
         {
             printf("Thank you for using the inventory system!\n");
-            printInventory(inventory, currentIndex);
+            print_inventory(inventory, current_index);
 
             break;
         }
 
-        Command command = getCommand(commandStr);
+        Command command = get_command(command_str);
 
         switch (command)
         {
         case ADD:
             printf("What key would you like to add? ");
-            scanf("%99s", inventory[currentIndex].key);
+            scanf("%99s", inventory[current_index].key);
 
             printf("\n");
 
             printf("What value would you like to add? ");
-            scanf("%99s", inventory[currentIndex].value);
+            scanf("%99s", inventory[current_index].value);
 
-            printf("\n Successfully added %s with value %s\n", inventory[currentIndex].key, inventory[currentIndex].value);
+            printf("\n Successfully added %s with value %s\n", inventory[current_index].key, inventory[current_index].value);
 
-            currentIndex++;
+            current_index++;
             break;
         case UPDATE:
-            // Code for the update command
+            printf("What key would you like to update? ");
+            char key_to_update[MAX_KEY_LENGTH];
+            scanf("%99s", key_to_update);
             break;
         case DELETE:
             // Code for the delete command
@@ -129,14 +131,14 @@ int main()
             printf("Key of item you'd like to read? ");
             char key[MAX_KEY_LENGTH];
             scanf("%99s", key);
-            printf("Value: %s\n", getValueByKey(&inventory, currentIndex, key));
+            printf("Value: %s\n", get_value_by_key(&inventory, current_index, key));
             break;
         case READ_INVENTORY:
-            printInventory(inventory, currentIndex);
+            print_inventory(inventory, current_index);
             break;
         case UNKNOWN:
         default:
-            printf("Unknown command: %s\n", commandStr);
+            printf("Unknown command: %s\n", command_str);
             break;
         }
     }
