@@ -160,7 +160,7 @@ int main()
             printf("\n");
 
             printf("What value would you like to add? ");
-            scanf("%99s", inventory[current_index].value);
+            fgets(inventory[current_index].value, MAX_VALUE_LENGTH, stdin);
 
             printf("\n Successfully added %s with value %s\n", inventory[current_index].key, inventory[current_index].value);
 
@@ -175,7 +175,7 @@ int main()
 
             char new_value[MAX_VALUE_LENGTH];
             printf("What would you like to update the value to? ");
-            scanf("%99s", new_value);
+            fgets(new_value, MAX_VALUE_LENGTH, stdin);
 
             printf("\n");
 
