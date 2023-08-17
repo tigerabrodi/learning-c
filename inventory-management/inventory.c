@@ -19,6 +19,7 @@ typedef enum
     UPDATE,
     DELETE,
     READ,
+    READ_INVENTORY,
     UNKNOWN
 } Command;
 
@@ -55,9 +56,26 @@ Command getCommand(const char *command)
     {
         return READ;
     }
+    else if (strcmp(command, "read-inventory") == 0)
+    {
+        return READ_INVENTORY;
+    }
     else
     {
         return UNKNOWN;
+    }
+}
+
+void printInventory(const Item *items, int currentIndex)
+{
+    printf("Current Inventory:\n");
+    for (int i = 0; i < currentIndex; i++)
+    {
+        printf("Key: %s, Value: %s\n", items[i].key, items[i].value);
+    }
+    if (currentIndex == 0)
+    {
+        printf("The inventory is empty.\n");
     }
 }
 
@@ -79,8 +97,8 @@ int main()
         if (strcmp(commandStr, "end") == 0)
         {
             printf("Thank you for using the inventory system!\n");
-            // You may print the entire inventory here if desired
-            break; // Exit the loop
+
+            break;
         }
 
         Command command = getCommand(commandStr);
@@ -111,6 +129,9 @@ int main()
             char key[MAX_KEY_LENGTH];
             scanf("%99s", key);
             printf("Value: %s\n", getValueByKey(&inventory, currentIndex, key));
+            break;
+        case READ_INVENTORY:
+            printInventory(inventory, currentIndex);
             break;
         case UNKNOWN:
         default:
