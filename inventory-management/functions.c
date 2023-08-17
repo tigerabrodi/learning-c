@@ -62,3 +62,44 @@ void delete_value_by_key(Inventory *items, int *current_index, const char *key)
 
 	printf("Successfully deleted %s\n", key);
 }
+
+void print_inventory(const Item *items, int current_index)
+{
+	printf("Current Inventory:\n");
+	for (int i = 0; i < current_index; i++)
+	{
+		printf("Key: %s, Value: %s\n", items[i].key, items[i].value);
+	}
+	if (current_index == 0)
+	{
+		printf("The inventory is empty.\n");
+	}
+}
+
+Command get_command(const char *command)
+{
+	if (strcmp(command, "add") == 0)
+	{
+		return ADD;
+	}
+	else if (strcmp(command, "update") == 0)
+	{
+		return UPDATE;
+	}
+	else if (strcmp(command, "delete") == 0)
+	{
+		return DELETE;
+	}
+	else if (strcmp(command, "read") == 0)
+	{
+		return READ;
+	}
+	else if (strcmp(command, "read-inventory") == 0)
+	{
+		return READ_INVENTORY;
+	}
+	else
+	{
+		return UNKNOWN;
+	}
+}
