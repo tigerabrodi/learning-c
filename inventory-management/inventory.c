@@ -64,51 +64,59 @@ Command getCommand(const char *command)
 int main()
 {
     char commandStr[20];
-
     int currentIndex = 0;
-
     Inventory inventory;
 
     printf("Welcome! Here you can manage your inventory.\n");
-    printf("You can either add, update or delete keys. You can also read what's in the inventory.\n");
-    printf("Keys can not have spaces in them.\n");
-    printf("What would you like to do? (add, update, delete, read): ");
-    scanf("%19s", commandStr);
+    printf("You can either add, update, or delete keys. You can also read what's in the inventory or end the program.\n");
+    printf("Keys cannot have spaces in them.\n");
 
-    Command command = getCommand(commandStr);
-
-    switch (command)
+    while (1) // Infinite loop to keep accepting commands
     {
-    case ADD:
-        printf("What key would you like to add? ");
-        scanf("%99s", inventory[currentIndex].key);
+        printf("What would you like to do? (add, update, delete, read, end): ");
+        scanf("%19s", commandStr);
 
-        printf("\n");
+        if (strcmp(commandStr, "end") == 0)
+        {
+            printf("Thank you for using the inventory system!\n");
+            // You may print the entire inventory here if desired
+            break; // Exit the loop
+        }
 
-        printf("What value would you like to add? ");
-        scanf("%99s", inventory[currentIndex].value);
+        Command command = getCommand(commandStr);
 
-        printf("\n Successfully added %s with value %s\n", inventory[currentIndex].key, inventory[currentIndex].value);
+        switch (command)
+        {
+        case ADD:
+            printf("What key would you like to add? ");
+            scanf("%99s", inventory[currentIndex].key);
 
-        currentIndex++;
+            printf("\n");
 
-        break;
-    case UPDATE:
-        // Code for the update command
-        break;
-    case DELETE:
-        // Code for the delete command
-        break;
-    case READ:
-        printf("Key of item you'd like to read? ");
-        char key[MAX_KEY_LENGTH];
-        scanf("%99s", key);
-        printf("Value: %s\n", getValueByKey(&inventory, currentIndex, key));
-        break;
-    case UNKNOWN:
-    default:
-        printf("Unknown command: %s\n", commandStr);
-        break;
+            printf("What value would you like to add? ");
+            scanf("%99s", inventory[currentIndex].value);
+
+            printf("\n Successfully added %s with value %s\n", inventory[currentIndex].key, inventory[currentIndex].value);
+
+            currentIndex++;
+            break;
+        case UPDATE:
+            // Code for the update command
+            break;
+        case DELETE:
+            // Code for the delete command
+            break;
+        case READ:
+            printf("Key of item you'd like to read? ");
+            char key[MAX_KEY_LENGTH];
+            scanf("%99s", key);
+            printf("Value: %s\n", getValueByKey(&inventory, currentIndex, key));
+            break;
+        case UNKNOWN:
+        default:
+            printf("Unknown command: %s\n", commandStr);
+            break;
+        }
     }
 
     return 0;
