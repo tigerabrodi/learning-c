@@ -38,6 +38,23 @@ char *get_value_by_key(Inventory *items, int current_index, const char *key)
     return NULL;
 }
 
+void update_value_by_key(Inventory *items, int current_index, const char *key, const char *new_value)
+{
+    for (int i = 0; i < current_index; i++)
+    {
+        if (strcmp((*items)[i].key, key) == 0)
+        {
+            strncpy((*items)[i].value, new_value, MAX_VALUE_LENGTH - 1);
+
+            (*items)[i].value[MAX_VALUE_LENGTH - 1] = '\0'; // Ensure null termination
+            printf("Successfully updated %s to %s\n", key, new_value);
+            return;
+        }
+    }
+
+    printf("Could not find key %s\n", key);
+}
+
 Command get_command(const char *command)
 {
     if (strcmp(command, "add") == 0)
@@ -123,6 +140,17 @@ int main()
             printf("What key would you like to update? ");
             char key_to_update[MAX_KEY_LENGTH];
             scanf("%99s", key_to_update);
+
+            printf("\n");
+
+            char new_value[MAX_VALUE_LENGTH];
+            printf("What would you like to update the value to? ");
+            scanf("%99s", new_value);
+
+            printf("\n");
+
+            update_value_by_key(&inventory, current_index, key_to_update, new_value);
+
             break;
         case DELETE:
             // Code for the delete command
