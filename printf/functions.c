@@ -39,7 +39,10 @@ void my_printf(const char *format, ...)
 		if (format[index] == '%')
 		{
 			index++; // Move past the '%' to the character that specifies the type
-			if (format[index] == 'd')
+
+			switch (format[index])
+			{
+			case 'd':
 			{
 				int integer_arg = va_arg(args, int);
 				char integer_str[12];			 // Buffer for the integer as a string; 12 is enough for 32-bit ints
@@ -64,9 +67,20 @@ void my_printf(const char *format, ...)
 				}
 
 				strcat(full_string_to_be_printed, integer_str);
+				break;
 			}
 
-			// TODO: Handle other format specifiers if needed
+			case 'c':
+			{
+				char char_arg = (char)va_arg(args, int); // Characters are promoted to int when passed
+				char char_str[2] = {char_arg, '\0'};
+
+				sprintf(char_str, "%c", char_arg);
+				strcat(full_string_to_be_printed, char_str);
+
+				break;
+			}
+			}
 		}
 		else
 		{
