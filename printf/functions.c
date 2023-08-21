@@ -3,6 +3,7 @@
 #include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 
 void my_putchar(char c)
 {
@@ -23,7 +24,8 @@ void my_printf(const char *format, ...)
 	va_start(args, format);
 
 	int index = 0;
-	char *full_string_to_be_printed = (char *)malloc(strlen(format) * 2); // Assuming enough space
+
+	char *full_string_to_be_printed = (char *)calloc(strlen(format) * 2, sizeof(char)); // Assuming enough space
 
 	if (full_string_to_be_printed == NULL)
 	{
@@ -34,20 +36,44 @@ void my_printf(const char *format, ...)
 
 	while (format[index] != '\0') // Keep looping until the end of the string
 	{
-		if (format[index] == '%') // Check if the current character is the start of a format specifier
+		if (format[index] == '%')
 		{
-			index++;		  // Move past the '%' to the character that specifies the type
-			if (format[index] == 'd') // If it's 'd', then an integer argument is expected
+			index++; // Move past the '%' to the character that specifies the type
+			if (format[index] == 'd')
 			{
-				int integer_arg = va_arg(args, int); // Get the next argument as an integer
-								     // TODO: Convert integer_arg to string
-								     // TODO: Concatenate the string to full_string_to_be_printed
+				int integer_arg = va_arg(args, int);
+				char integer_str[12];			 // Buffer for the integer as a string; 12 is enough for 32-bit ints
+				sprintf(integer_str, "%d", integer_arg); // Convert the integer to a string
+
+				// Reallocate memory for full_string_to_be_printed if needed
+				size_t current_length = strlen(full_string_to_be_printed);
+				size_t needed_length = current_length + strlen(integer_str) + 1; // +1 for null-terminator
+
+				// Handle reallocation
+				if (needed_length > strlen(format) * 2)
+				{
+					char *new_buffer_for_full_string = (char *)realloc(full_string_to_be_printed, needed_length);
+					if (new_buffer_for_full_string == NULL)
+					{
+						my_puts("Memory reallocation failed\n");
+						free(full_string_to_be_printed);
+						va_end(args);
+						return;
+					}
+					full_string_to_be_printed = new_buffer_for_full_string;
+				}
+
+				strcat(full_string_to_be_printed, integer_str);
 			}
+
 			// TODO: Handle other format specifiers if needed
 		}
 		else
 		{
-			// TODO: Add the character to full_string_to_be_printed since it's not part of a format specifier
+			// Can't use strcat because it expects its second argument to be a pointer to a null-terminated string, so it will keep reading memory until it finds a null character, resulting in an error.
+			size_t len = strlen(full_string_to_be_printed);
+			full_string_to_be_printed[len] = format[index];
+			full_string_to_be_printed[len + 1] = '\0';
 		}
 
 		index++; // Move to the next character in the format string
