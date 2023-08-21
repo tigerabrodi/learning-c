@@ -10,5 +10,7 @@ int main()
 
 	my_printf("handle strings %s %s %s\n", "string1", "string2", "string3");
 
+	my_printf("handle percentage sign %%\n");
+
 	return 0;
 }

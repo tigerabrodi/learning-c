@@ -89,7 +89,6 @@ void my_printf(const char *format, ...)
 			case 's':
 			{
 				char *string_arg = va_arg(args, char *);
-				strcat(full_string_to_be_printed, string_arg);
 
 				size_t current_length = strlen(full_string_to_be_printed);
 				size_t needed_length = current_length + strlen(string_arg) + 1; // +1 for null-terminator
@@ -99,6 +98,15 @@ void my_printf(const char *format, ...)
 				{
 					handle_reallocation(full_string_to_be_printed, needed_length, args);
 				}
+
+				strcat(full_string_to_be_printed, string_arg);
+
+				break;
+			}
+			case '%':
+			{
+				char percent_str[2] = {'%', '\0'};
+				strcat(full_string_to_be_printed, percent_str);
 
 				break;
 			}
