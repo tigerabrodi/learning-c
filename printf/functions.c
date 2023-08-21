@@ -80,6 +80,31 @@ void my_printf(const char *format, ...)
 
 				break;
 			}
+
+			case 's':
+			{
+				char *string_arg = va_arg(args, char *);
+				strcat(full_string_to_be_printed, string_arg);
+
+				size_t current_length = strlen(full_string_to_be_printed);
+				size_t needed_length = current_length + strlen(string_arg) + 1; // +1 for null-terminator
+
+				// Handle reallocation
+				if (needed_length > strlen(format) * 2)
+				{
+					char *new_buffer_for_full_string = (char *)realloc(full_string_to_be_printed, needed_length);
+					if (new_buffer_for_full_string == NULL)
+					{
+						my_puts("Memory reallocation failed\n");
+						free(full_string_to_be_printed);
+						va_end(args);
+						return;
+					}
+					full_string_to_be_printed = new_buffer_for_full_string;
+				}
+
+				break;
+			}
 			}
 		}
 		else
