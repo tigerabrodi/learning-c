@@ -18,6 +18,19 @@ void my_puts(const char *str)
 	}
 }
 
+void handle_reallocation(char *full_string_to_be_printed, size_t needed_length, va_list args)
+{
+	char *new_buffer_for_full_string = (char *)realloc(full_string_to_be_printed, needed_length);
+	if (new_buffer_for_full_string == NULL)
+	{
+		my_puts("Memory reallocation failed\n");
+		free(full_string_to_be_printed);
+		va_end(args);
+		return;
+	}
+	full_string_to_be_printed = new_buffer_for_full_string;
+}
+
 void my_printf(const char *format, ...)
 {
 	va_list args;
@@ -55,15 +68,7 @@ void my_printf(const char *format, ...)
 				// Handle reallocation
 				if (needed_length > strlen(format) * 2)
 				{
-					char *new_buffer_for_full_string = (char *)realloc(full_string_to_be_printed, needed_length);
-					if (new_buffer_for_full_string == NULL)
-					{
-						my_puts("Memory reallocation failed\n");
-						free(full_string_to_be_printed);
-						va_end(args);
-						return;
-					}
-					full_string_to_be_printed = new_buffer_for_full_string;
+					handle_reallocation(full_string_to_be_printed, needed_length, args);
 				}
 
 				strcat(full_string_to_be_printed, integer_str);
@@ -92,15 +97,7 @@ void my_printf(const char *format, ...)
 				// Handle reallocation
 				if (needed_length > strlen(format) * 2)
 				{
-					char *new_buffer_for_full_string = (char *)realloc(full_string_to_be_printed, needed_length);
-					if (new_buffer_for_full_string == NULL)
-					{
-						my_puts("Memory reallocation failed\n");
-						free(full_string_to_be_printed);
-						va_end(args);
-						return;
-					}
-					full_string_to_be_printed = new_buffer_for_full_string;
+					handle_reallocation(full_string_to_be_printed, needed_length, args);
 				}
 
 				break;
