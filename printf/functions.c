@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <stdbool.h>
 
 void my_putchar(char c)
 {
@@ -53,6 +54,17 @@ void my_printf(const char *format, ...)
 		if (format[index] == '%')
 		{
 			index++; // Move past the '%' to the character that specifies the type
+
+			bool should_print_width_with_next_arg = format[index] == '*';
+			if (should_print_width_with_next_arg)
+			{
+				int width = va_arg(args, int);
+				for (int i = 0; i < width; i++)
+				{
+					strcat(full_string_to_be_printed, " ");
+				}
+				index++; // Move past the '*' to the character that specifies the type
+			}
 
 			switch (format[index])
 			{

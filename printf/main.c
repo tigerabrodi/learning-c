@@ -14,5 +14,7 @@ int main()
 
 	my_printf("handle percentage sign %%\n");
 
+	my_printf("handle width and numbers with * %*d %*d %*d\n", 5, 1, 10, 2, 15, 3);
+
 	return 0;
 }
