@@ -16,5 +16,7 @@ int main()
 
 	my_printf("handle width and numbers with * %*d %*d %*d\n", 5, 1, 10, 2, 15, 3);
 
+	my_printf("handle width with numbers and * for all d, f, s, c %*d %*f %*s %55c\n", 5, 1, 10, 2.0, 15, "string", 'c');
+
 	return 0;
 }

@@ -6,6 +6,34 @@
 #include <stdio.h>
 #include <stdbool.h>
 
+typedef enum
+{
+	FORMAT_INT,		// Represents %d
+	FORMAT_CHAR,		// Represents %c
+	FORMAT_STR,		// Represents %s
+	FORMAT_FLOAT,		// Represents %f
+	FORMAT_PERCENTAGE_SIGN, // Represents %%
+} FormatSpecifier;
+
+FormatSpecifier get_format_specifier(const char format)
+{
+	switch (format)
+	{
+	case 'd':
+		return FORMAT_INT;
+	case 'c':
+		return FORMAT_CHAR;
+	case 's':
+		return FORMAT_STR;
+	case 'f':
+		return FORMAT_FLOAT;
+	case '%':
+		return FORMAT_PERCENTAGE_SIGN;
+	default:
+		return -1;
+	}
+}
+
 void my_putchar(char c)
 {
 	write(1, &c, 1); // 1 represents STDOUT_FILENO, the standard output file descriptor
@@ -55,20 +83,38 @@ void my_printf(const char *format, ...)
 		{
 			index++; // Move past the '%' to the character that specifies the type
 
-			bool should_print_width_with_next_arg = format[index] == '*';
+			bool should_print_width_with_next_arg = format[index] == '*' || (format[index] >= '0' && format[index] <= '9');
 			if (should_print_width_with_next_arg)
 			{
-				int width = va_arg(args, int);
+				int width = 0;
+				if (format[index] == '*')
+				{
+					width = va_arg(args, int);
+				}
+				else
+				{
+					// Parse width as a multi-digit integer
+					while (format[index] >= '0' && format[index] <= '9')
+					{
+						// Multiplying width by 10 shifts its value one place to the left (like adding a zero to the right end in decimal notation).
+						// This allows for each digit to be added to its appropriate place in the number.
+						// For example, if the string has "554", first 5 is processed (5), then 5 (55), then 4 (554).
+						width = width * 10 + (format[index] - '0'); // Subtracting '0' converts ASCII value of digit to its integer value
+						index++;
+					}
+				}
 				for (int i = 0; i < width; i++)
 				{
 					strcat(full_string_to_be_printed, " ");
 				}
-				index++; // Move past the '*' to the character that specifies the type
+				index++; // Move past the '*' or number(s) to the character that specifies the type
 			}
 
-			switch (format[index])
+			FormatSpecifier format_specifier = get_format_specifier(format[index]);
+
+			switch (format_specifier)
 			{
-			case 'd':
+			case FORMAT_INT:
 			{
 				int integer_arg = va_arg(args, int);
 				char integer_str[12];			 // Buffer for the integer as a string; 12 is enough for 32-bit ints
@@ -88,7 +134,7 @@ void my_printf(const char *format, ...)
 				break;
 			}
 
-			case 'c':
+			case FORMAT_CHAR:
 			{
 				char char_arg = (char)va_arg(args, int); // Characters are promoted to int when passed
 				char char_str[2] = {char_arg, '\0'};
@@ -99,7 +145,7 @@ void my_printf(const char *format, ...)
 				break;
 			}
 
-			case 's':
+			case FORMAT_STR:
 			{
 				char *string_arg = va_arg(args, char *);
 
@@ -116,7 +162,7 @@ void my_printf(const char *format, ...)
 
 				break;
 			}
-			case 'f':
+			case FORMAT_FLOAT:
 			{
 				double double_arg = va_arg(args, double);
 				char double_str[20];
@@ -134,7 +180,7 @@ void my_printf(const char *format, ...)
 
 				break;
 			}
-			case '%':
+			case FORMAT_PERCENTAGE_SIGN:
 			{
 				char percent_str[2] = {'%', '\0'};
 				strcat(full_string_to_be_printed, percent_str);
