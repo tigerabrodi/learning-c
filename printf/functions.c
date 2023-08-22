@@ -38,7 +38,8 @@ void my_printf(const char *format, ...)
 
 	int index = 0;
 
-	char *full_string_to_be_printed = (char *)calloc(strlen(format) * 2, sizeof(char)); // Assuming enough space
+	int initial_string_size = strlen(format) * 2;
+	char *full_string_to_be_printed = (char *)calloc(initial_string_size, sizeof(char)); // Assuming enough space
 
 	if (full_string_to_be_printed == NULL)
 	{
@@ -66,7 +67,7 @@ void my_printf(const char *format, ...)
 				size_t needed_length = current_length + strlen(integer_str) + 1; // +1 for null-terminator
 
 				// Handle reallocation
-				if (needed_length > strlen(format) * 2)
+				if (needed_length > initial_string_size)
 				{
 					handle_reallocation(full_string_to_be_printed, needed_length, args);
 				}
@@ -94,12 +95,30 @@ void my_printf(const char *format, ...)
 				size_t needed_length = current_length + strlen(string_arg) + 1; // +1 for null-terminator
 
 				// Handle reallocation
-				if (needed_length > strlen(format) * 2)
+				if (needed_length > initial_string_size)
 				{
 					handle_reallocation(full_string_to_be_printed, needed_length, args);
 				}
 
 				strcat(full_string_to_be_printed, string_arg);
+
+				break;
+			}
+			case 'f':
+			{
+				double double_arg = va_arg(args, double);
+				char double_str[20];
+				sprintf(double_str, "%f", double_arg);
+
+				size_t current_length = strlen(full_string_to_be_printed);
+				size_t needed_length = current_length + strlen(double_str) + 1;
+
+				if (needed_length > initial_string_size)
+				{
+					handle_reallocation(full_string_to_be_printed, needed_length, args);
+				}
+
+				strcat(full_string_to_be_printed, double_str);
 
 				break;
 			}
