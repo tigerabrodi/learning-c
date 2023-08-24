@@ -33,8 +33,8 @@ int main()
 	TestSuite first_suite = create_suite("First Suite");
 
 	// Register tests to the first_suite
-	register_test_with_suite(test_sample, &first_suite);
-	register_test_with_suite(test_sample2, &first_suite);
+	register_test_with_suite(test_sample, "test_sample", &first_suite);
+	register_test_with_suite(test_sample2, "test_sample2", &first_suite);
 	register_test(test_sample3);
 
 	// Run the specific test suite

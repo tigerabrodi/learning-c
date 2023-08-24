@@ -58,23 +58,26 @@ void register_test(test_func test)
 	printf("[ERROR] Test failed to register.\n");
 }
 
-void register_test_with_suite(test_func test, TestSuite *suite)
+void register_test_with_suite(test_func test, char *test_name, TestSuite *suite)
 {
-	if (suite->test_count < MAX_TESTS)
+	if (suite->test_count < MAX_TESTS_FOR_SUITE)
 	{
 		suite->tests[suite->test_count] = test;
+		suite->test_names[suite->test_count] = test_name;
 		suite->test_count++;
 		return;
 	}
 
-	printf("[ERROR] Failed to register a test under suite '%s'. Max tests reached.\n", suite->suite_name);
+	printf("[ERROR] Test failed to register.\n");
 }
 
 void run_suite(TestSuite *suite)
 {
-	printf("\n=== Running suite: %s ===\n", suite->suite_name);
+	printf("\n=== Running Suite: %s ===\n", suite->suite_name);
+
 	for (int i = 0; i < suite->test_count; i++)
 	{
+		printf("\n--- Test: %s ---\n", suite->test_names[i]);
 		suite->tests[i]();
 	}
 }
