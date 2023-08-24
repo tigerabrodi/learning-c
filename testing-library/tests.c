@@ -42,23 +42,32 @@ void assert_false(int condition, const char *test_name)
 }
 
 int test_count = 0;
-const int max_tests = 100;
+const int MAX_TESTS = 100;
 
 // array of registered tests max 100
-test_func registered_tests[max_tests];
+test_func registered_tests[MAX_TESTS];
 
-void register_test(test_func test, TestSuite *suite)
+void register_test(test_func test)
 {
-	if (suite->test_count < max_tests)
-	{
-		suite->tests[suite->test_count] = test;
-		suite->test_count++;
-	}
-	if (test_count < max_tests)
+	if (test_count < MAX_TESTS)
 	{
 		registered_tests[test_count] = test;
 		test_count++;
 	}
+
+	printf("[ERROR] Test failed to register.\n");
+}
+
+void register_test_with_suite(test_func test, TestSuite *suite)
+{
+	if (suite->test_count < MAX_TESTS)
+	{
+		suite->tests[suite->test_count] = test;
+		suite->test_count++;
+		return;
+	}
+
+	printf("[ERROR] Failed to register a test under suite '%s'. Max tests reached.\n", suite->suite_name);
 }
 
 void run_suite(TestSuite *suite)
